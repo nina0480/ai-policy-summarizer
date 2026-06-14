@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Upload Policy — AI Policy Summarizer{% endblock %}
+
+{% block content %}
+
+<!-- ─── Hero ─────────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <div class="hero-badge">
+          <i class="bi bi-stars"></i> Powered by Gemini AI
+        </div>
+        <h1>Understand Any Policy<br>in Seconds</h1>
+        <p>Upload government schemes, scholarships, subsidies, or insurance PDFs and get an instant structured breakdown — benefits, eligibility, deadlines, and more.</p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="stat-num">📄</span>
+            <span class="stat-label">Any PDF Policy</span>
+          </div>
+          <div class="hero-stat">
+            <span class="stat-num">⚡</span>
+            <span class="stat-label">Instant Analysis</span>
+          </div>
+          <div class="hero-stat">
+            <span class="stat-num">🔒</span>
+            <span class="stat-label">No Hallucinations</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Main Content ──────────────────────────────────────────── -->
+<div class="page-content">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Upload Card -->
+      <div class="col-lg-8">
+        <div class="upload-card fade-in">
+          <div class="upload-card-header pb-3">
+            <div class="feature-icon" style="background:rgba(26,86,219,0.08);color:var(--primary)">
+              <i class="bi bi-cloud-upload"></i>
+            </div>
+            <div>
+              <h2>Upload Policy Document</h2>
+              <p class="text-muted mb-0" style="font-size:0.825rem;">PDF files only · Max {{ max_mb }} MB</p>
+            </div>
+          </div>
+
+          <div class="upload-body">
+            <form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+
+              <!-- Drop Zone -->
+              <div class="drop-zone" id="drop-zone">
+                <div class="drop-icon">📋</div>
+                <h3>Drag & Drop your PDF here</h3>
+                <p>or click to browse your files</p>
+                <button type="button" id="browse-btn" class="btn-outline-custom">
+                  <i class="bi bi-folder2-open"></i> Browse Files
+                </button>
+                <input type="file" id="pdf_file" name="pdf_file"
+                       accept=".pdf,application/pdf"
+                       style="display:none;" required />
+              </div>
+
+              <!-- File Info -->
+              <div class="file-selected-info" id="file-selected-info">
+                <i class="bi bi-file-earmark-pdf" style="font-size:1.4rem;color:var(--success);flex-shrink:0;"></i>
+                <span class="file-name" id="file-name">—</span>
+                <span class="file-size" id="file-size">—</span>
+                <i class="bi bi-check-circle-fill" style="color:var(--success);margin-left:auto;"></i>
+              </div>
+
+              <!-- Submit -->
+              <div class="mt-4">
+                <button type="submit" class="btn-primary-custom w-100" style="justify-content:center;">
+                  <i class="bi bi-cpu"></i> Analyze with AI
+                </button>
+              </div>
+
+              <p class="text-center mt-2" style="font-size:0.775rem;color:var(--text-light);">
+                ✅ Your document is processed securely and never shared.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Info -->
+      <div class="col-lg-4">
+        <div class="feature-cards">
+
+          <div class="feature-card mb-3 fade-in fade-in-delay-1">
+            <div class="feature-icon" style="background:rgba(16,185,129,0.1);color:var(--success);">🏛️</div>
+            <h5>What can I upload?</h5>
+            <p>Government schemes, scholarships, subsidies, insurance policies, welfare programs, and any PDF policy document.</p>
+          </div>
+
+          <div class="feature-card mb-3 fade-in fade-in-delay-2">
+            <div class="feature-icon" style="background:rgba(245,158,11,0.1);color:var(--warning);">⚡</div>
+            <h5>What do I get?</h5>
+            <p>Policy name, description, full benefits list, eligibility criteria, and last date to apply — all extracted directly from the document.</p>
+          </div>
+
+          <div class="feature-card fade-in fade-in-delay-3">
+            <div class="feature-icon" style="background:rgba(239,68,68,0.1);color:var(--danger);">🔒</div>
+            <h5>No hallucinations</h5>
+            <p>The AI only uses information present in your document. If a field is missing, it says <em>"Not Specified"</em> — never makes things up.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

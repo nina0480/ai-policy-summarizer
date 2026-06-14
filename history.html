@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Policy History — AI Policy Summarizer{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="page-hero" style="padding:2.5rem 0 3rem;">
+  <div class="container">
+    <div class="hero-badge"><i class="bi bi-clock-history"></i> History</div>
+    <h1 style="font-size:2rem;">Your Policy Summaries</h1>
+    <p>All previously analyzed policy documents, searchable and downloadable.</p>
+  </div>
+</section>
+
+<div class="page-content">
+  <div class="container">
+
+    <!-- Search Bar -->
+    <form id="search-form" action="{{ url_for('history') }}" method="GET">
+      <div class="search-bar fade-in">
+        <i class="bi bi-search" style="color:var(--text-muted);font-size:1.1rem;align-self:center;"></i>
+        <input
+          type="text"
+          id="search-input"
+          name="search"
+          class="search-input"
+          placeholder="Search by policy name…"
+          value="{{ search }}"
+          autocomplete="off"
+        />
+        <button type="submit" class="btn-primary-custom" style="padding:0.75rem 1.5rem;">
+          <i class="bi bi-search"></i> Search
+        </button>
+        {% if search %}
+        <a href="{{ url_for('history') }}" class="btn-outline-custom">
+          <i class="bi bi-x"></i> Clear
+        </a>
+        {% endif %}
+      </div>
+    </form>
+
+    <!-- Results Count -->
+    {% if search %}
+    <p class="mb-3" style="font-size:0.875rem;color:var(--text-muted);">
+      {% if policies %}
+        Found <strong>{{ policies|length }}</strong> result{{ 's' if policies|length != 1 }} for "<strong>{{ search }}</strong>"
+      {% else %}
+        No results for "<strong>{{ search }}</strong>"
+      {% endif %}
+    </p>
+    {% else %}
+    <p class="mb-3" style="font-size:0.875rem;color:var(--text-muted);">
+      {{ policies|length }} polic{{ 'ies' if policies|length != 1 else 'y' }} analyzed
+    </p>
+    {% endif %}
+
+    <!-- Policy Cards -->
+    {% if policies %}
+      {% for policy in policies %}
+      <div class="history-card fade-in">
+        <div class="row align-items-start">
+          <div class="col">
+            <div class="history-card-title">
+              <i class="bi bi-file-earmark-text me-2" style="color:var(--primary);"></i>
+              {{ policy.policy_name }}
+            </div>
+            <div class="history-card-desc">
+              {{ policy.description[:120] + '…' if policy.description and policy.description|length > 120 and policy.description != 'Not Specified' else (policy.description or 'No description available') }}
+            </div>
+            <div class="history-card-footer">
+              <div class="d-flex flex-wrap gap-2 align-items-center">
+                <span class="meta-pill" style="font-size:0.775rem;">
+                  <i class="bi bi-calendar3"></i> {{ policy.upload_date }}
+                </span>
+                {% if policy.last_date and policy.last_date != 'Not Specified' %}
+                <span class="meta-pill" style="font-size:0.775rem;border-color:rgba(245,158,11,0.3);color:var(--warning);">
+                  <i class="bi bi-alarm" style="color:var(--warning);"></i> {{ policy.last_date }}
+                </span>
+                {% endif %}
+              </div>
+              <div class="history-actions">
+                <a href="{{ url_for('result', policy_id=policy.id) }}" class="btn-outline-custom" style="font-size:0.8rem;padding:0.45rem 0.875rem;">
+                  <i class="bi bi-eye"></i> View
+                </a>
+                <a href="{{ url_for('download_pdf', policy_id=policy.id) }}" class="btn-outline-custom" style="font-size:0.8rem;padding:0.45rem 0.875rem;">
+                  <i class="bi bi-file-earmark-pdf"></i> PDF
+                </a>
+                <a href="{{ url_for('download_txt', policy_id=policy.id) }}" class="btn-outline-custom" style="font-size:0.8rem;padding:0.45rem 0.875rem;">
+                  <i class="bi bi-file-earmark-text"></i> TXT
+                </a>
+                <form action="{{ url_for('delete', policy_id=policy.id) }}" method="POST" style="display:inline;"
+                      onsubmit="return confirmDelete('{{ policy.policy_name | replace("'", "\\'") }}')">
+                  <button type="submit" class="btn-danger-custom">
+                    <i class="bi bi-trash3"></i> Delete
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+    {% else %}
+      <!-- Empty State -->
+      <div class="empty-state fade-in">
+        <div class="empty-icon">📭</div>
+        {% if search %}
+          <h4>No matching policies found</h4>
+          <p>Try a different search term or <a href="{{ url_for('history') }}" style="color:var(--primary);">view all policies</a>.</p>
+        {% else %}
+          <h4>No policies analyzed yet</h4>
+          <p>Upload your first policy document to get started.</p>
+          <div class="mt-3">
+            <a href="{{ url_for('index') }}" class="btn-primary-custom">
+              <i class="bi bi-upload"></i> Upload a Policy
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

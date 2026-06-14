@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}{{ policy.policy_name }} — AI Policy Summarizer{% endblock %}
+
+{% block content %}
+<div class="page-content">
+  <div class="container">
+
+    <!-- Back Button -->
+    <div class="mb-3 fade-in">
+      <a href="{{ url_for('index') }}" class="btn-outline-custom" style="font-size:0.825rem;">
+        <i class="bi bi-arrow-left"></i> Analyze Another
+      </a>
+    </div>
+
+    <!-- Policy Header Card -->
+    <div class="result-header fade-in">
+      <div class="policy-badge">
+        <i class="bi bi-file-earmark-check"></i> Policy Summary
+      </div>
+      <h1 class="policy-title">{{ policy.policy_name }}</h1>
+
+      <div class="meta-row">
+        <span class="meta-pill">
+          <i class="bi bi-calendar3"></i>
+          Uploaded: {{ policy.upload_date }}
+        </span>
+        {% if policy.last_date and policy.last_date != 'Not Specified' %}
+        <span class="meta-pill" style="border-color:rgba(245,158,11,0.3);color:var(--warning);">
+          <i class="bi bi-alarm" style="color:var(--warning);"></i>
+          Deadline: {{ policy.last_date }}
+        </span>
+        {% endif %}
+      </div>
+
+      <!-- Download Actions -->
+      <div class="result-actions">
+        <a href="{{ url_for('download_pdf', policy_id=policy.id) }}" class="btn-primary-custom">
+          <i class="bi bi-file-earmark-pdf"></i> Download PDF
+        </a>
+        <a href="{{ url_for('download_txt', policy_id=policy.id) }}" class="btn-outline-custom">
+          <i class="bi bi-file-earmark-text"></i> Download TXT
+        </a>
+        <a href="{{ url_for('history') }}" class="btn-outline-custom">
+          <i class="bi bi-clock-history"></i> View History
+        </a>
+      </div>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="row g-3 mt-1">
+
+      <!-- Description -->
+      <div class="col-12 fade-in fade-in-delay-1">
+        <div class="info-section">
+          <div class="info-section-header">
+            <div class="info-section-icon" style="background:rgba(26,86,219,0.1);color:var(--primary);">
+              📝
+            </div>
+            <h4>Description</h4>
+          </div>
+          <div class="info-section-body">
+            {% if policy.description and policy.description != 'Not Specified' %}
+              <p class="description-text">{{ policy.description }}</p>
+            {% else %}
+              <p class="not-specified">Not Specified</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Benefits -->
+      <div class="col-md-6 fade-in fade-in-delay-2">
+        <div class="info-section">
+          <div class="info-section-header">
+            <div class="info-section-icon" style="background:rgba(16,185,129,0.1);color:var(--success);">
+              🎁
+            </div>
+            <h4>Benefits</h4>
+          </div>
+          <div class="info-section-body">
+            {% if policy.benefits and policy.benefits != ['Not Specified'] %}
+              <ul class="benefit-list">
+                {% for benefit in policy.benefits %}
+                <li>
+                  <span class="list-bullet" style="background:rgba(16,185,129,0.12);color:var(--success);">✓</span>
+                  <span>{{ benefit }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="not-specified">Not Specified</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Eligibility -->
+      <div class="col-md-6 fade-in fade-in-delay-3">
+        <div class="info-section">
+          <div class="info-section-header">
+            <div class="info-section-icon" style="background:rgba(6,182,212,0.1);color:var(--accent);">
+              ✅
+            </div>
+            <h4>Eligibility Criteria</h4>
+          </div>
+          <div class="info-section-body">
+            {% if policy.eligibility and policy.eligibility != ['Not Specified'] %}
+              <ul class="eligibility-list">
+                {% for criterion in policy.eligibility %}
+                <li>
+                  <span class="list-bullet" style="background:rgba(6,182,212,0.12);color:var(--accent);">›</span>
+                  <span>{{ criterion }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="not-specified">Not Specified</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Last Date -->
+      <div class="col-12 fade-in fade-in-delay-4">
+        <div class="info-section">
+          <div class="info-section-header">
+            <div class="info-section-icon" style="background:rgba(245,158,11,0.1);color:var(--warning);">
+              📅
+            </div>
+            <h4>Last Date to Apply</h4>
+          </div>
+          <div class="info-section-body">
+            {% if policy.last_date and policy.last_date != 'Not Specified' %}
+              <div class="date-display">
+                <div class="date-icon-wrap">📅</div>
+                <div>
+                  <div class="date-value">{{ policy.last_date }}</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted);">Application deadline</div>
+                </div>
+              </div>
+            {% else %}
+              <p class="not-specified">Not Specified</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+
+  </div>
+</div>
+{% endblock %}
